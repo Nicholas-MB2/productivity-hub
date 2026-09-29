@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+
+  <!-- Pasang konfigurasi PWA di dalam tag <head> index.html -->
+  <link rel="manifest"
+    href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22Productivity%20Hub%22%2C%22short_name%22%3A%22ProdHub%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%230f766e%22%7D">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ProductivityHub">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#754321">
+  <meta name="description"
+    content="Productivity Hub - Aplikasi produktivitas mobile harian yang cozy, modern, dan mindful.">
+  <title>Productivity Hub</title>
+  <style>
+    /* ==========================================================================
+       CENTRALIZED DESIGN TOKEN SYSTEM (SINGLE SOURCE OF TRUTH)
+       ========================================================================== */
+    :root {
+      /* --- RAW PALETTE TOKENS (Base Colors) --- */
+      --brown-900: #4A2A18;
+      --brown-800: #5C351F;
+      --brown-700: #754321;
+      --brown-600: #92552A;
+
+      --orange-500: #D97732;
+      --orange-400: #E58A3A;
+      --orange-300: #F0A04B;
+
+      --yellow-500: #E8B84A;
+      --yellow-400: #F2C65C;
+      --yellow-300: #F7D77A;
+
+      --cream-100: #FFF9EC;
+      --cream-200: #FFF3D6;
+      --cream-300: #F8E8C8;
+
+      --green-500: #7C9A5A;
+      --green-600: #4C7242;
+      --red-500: #EF4444;
+
+      /* --- SEMANTIC COLOR TOKENS (LIGHT MODE) --- */
+      --color-bg: var(--cream-100);
+      --color-surface: var(--cream-100);
+      --color-surface-warm: var(--cream-200);
+      --color-surface-card: #FFFFFF;
+      --color-surface-card-subtle: #FAF5EE;
+
+      --color-text-primary: var(--brown-900);
+      --color-text-secondary: #80624D;
+      --color-text-muted: #967866;
+      --color-text-on-primary: var(--cream-100);
+
+      --color-primary: var(--brown-700);
+      --color-primary-hover: var(--brown-800);
+      --color-primary-light: rgba(117, 67, 33, 0.08);
+
+      --color-accent: var(--orange-500);
+      --color-accent-hover: var(--orange-400);
+
+      --color-highlight: var(--yellow-500);
+
+      --color-success: var(--green-500);
+      --color-success-bg: rgba(124, 154, 90, 0.14);
+      --color-danger: var(--red-500);
+      --color-danger-bg: rgba(239, 68, 68, 0.12);
+      --color-warning: var(--yellow-500);
+
+      --color-border: rgba(74, 42, 24, 0.10);
+      --color-border-subtle: rgba(74, 42, 24, 0.06);
+      --color-focus: var(--orange-500);
+
+      /* --- PRIORITY TOKENS --- */
+      --priority-high: var(--red-500);
+      --priority-medium: var(--yellow-500);
+      --priority-low: var(--green-500);
+
+      /* --- COMPONENT-SPECIFIC TOKENS --- */
+      --todo-checkbox-size: 24px;
+      --todo-checkbox-checked: var(--color-success);
+      --focus-ring-track: rgba(74, 42, 24, 0.10);
+      --focus-progress: var(--color-accent);
+      --journal-save-action: var(--color-primary);
+      --nav-bg: rgba(255, 249, 236, 0.90);
+      --desktop-canvas-bg: #F1F5F9;
+
+      /* --- GEOMETRY & ELEVATION --- */
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+      --radius-pill: 9999px;
+
+      --shadow-sm: 0 2px 8px rgba(74, 42, 24, 0.04);
+      --shadow-card: 0 4px 18px rgba(74, 42, 24, 0.06);
+      --shadow-hover: 0 8px 24px rgba(74, 42, 24, 0.10);
+      --shadow-hero: 0 10px 25px rgba(117, 67, 33, 0.22);
+      --shadow-nav: 0 -4px 20px rgba(74, 42, 24, 0.05);
+
+      --font-stack: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --transition-fast: 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* ==========================================================================
+       DARK MODE OVERRIDES (SEMANTIC CONTRACT IS 100% COMPLETE)
+       ========================================================================== */
+    [data-theme="dark"] {
+      --color-bg: #24160F;
+      --color-surface: #2E1D15;
+      --color-surface-warm: #3A251B;
+      --color-surface-card: #332016;
+      --color-surface-card-subtle: #3A251B;
+
+      --color-text-primary: #FFF3D6;
+      --color-text-secondary: #E8CFAE;
+      --color-text-muted: #B99A7A;
+      --color-text-on-primary: #FFF3D6;
+
+      --color-primary: #92552A;
+      --color-primary-hover: #B96F3B;
+      --color-primary-light: rgba(232, 138, 58, 0.12);
+
+      --color-accent: #E58A3A;
+      --color-accent-hover: #F0A04B;
+
+      --color-highlight: #F2C65C;
+
+      --color-success: #7C9A5A;
+      --color-success-bg: rgba(124, 154, 90, 0.20);
+      --color-danger: #EF4444;
+      --color-danger-bg: rgba(239, 68, 68, 0.20);
+      --color-warning: #E8B84A;
+
+      --color-border: rgba(255, 243, 214, 0.10);
+      --color-border-subtle: rgba(255, 243, 214, 0.06);
+      --color-focus: #F2C65C;
+
+      --focus-ring-track: rgba(255, 243, 214, 0.10);
+      --nav-bg: rgba(36, 22, 15, 0.90);
+      --desktop-canvas-bg: #140C08;
+
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+      --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.35);
+      --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow-hero: 0 10px 25px rgba(0, 0, 0, 0.40);
+      --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    /* ==========================================================================
+       BASE RESETS & VIEWPORT FRAME
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: var(--font-stack);
+      color: var(--color-text-primary);
+      background-color: var(--desktop-canvas-bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: radial-gradient(circle at 90% 8%, rgba(229, 138, 58, 0.12), transparent 40%),
+        radial-gradient(circle at 10% 45%, var(--color-primary-light), transparent 50%),
+        var(--color-bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      overflow-x: hidden;
+      transition: background var(--transition-fast);
+    }
+
+    @media (max-width: 420px) {
+      .app-viewport {
+        max-width: 100%;
+        box-shadow: none;
+      }
+    }
+
+    .app-main {
+      flex: 1;
+      padding: 18px 18px calc(88px + env(safe-area-inset-bottom)) 18px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ==========================================================================
+       HEADER & ACTIONS (DYNAMIC GREETING, THEME TOGGLE, AVATAR)
+       ========================================================================== */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-top: 4px;
+    }
+
+    .greeting-sub {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      text-transform: capitalize;
+      letter-spacing: 0.3px;
+      margin-bottom: 2px;
+    }
+
+    .greeting-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.4px;
+      line-height: 1.25;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface-card);
+      color: var(--color-text-secondary);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-theme-toggle:hover {
+      color: var(--color-primary);
+      border-color: var(--color-focus);
+    }
+
+    .btn-theme-toggle:active {
+      transform: scale(0.92);
+    }
+
+    .avatar-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface-card);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+      position: relative;
+    }
+
+    .avatar-btn:active {
+      transform: scale(0.94);
+    }
+
+    .capy-status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 10px;
+      height: 10px;
+      background-color: var(--color-success);
+      border: 2px solid var(--color-surface-card);
+      border-radius: 50%;
+    }
+
+    /* ==========================================================================
+       HERO CARD (PROGRESS SUMMARY)
+       ========================================================================== */
+    .hero-card {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      color: var(--cream-100);
+      border-radius: var(--radius-xl);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-hero);
+      margin-bottom: 20px;
+      transition: transform var(--transition-fast);
+    }
+
+    .hero-bg-art {
+      position: absolute;
+      right: -8px;
+      bottom: -10px;
+      opacity: 0.18;
+      pointer-events: none;
+      width: 130px;
+      height: 110px;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      opacity: 0.88;
+      margin-bottom: 6px;
+    }
+
+    .hero-status {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-subtext {
+      font-size: 13px;
+      opacity: 0.9;
+      font-weight: 400;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: #FFFFFF;
+      border-radius: var(--radius-pill);
+      width: 0%;
+      transition: width 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .progress-metrics {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    /* ==========================================================================
+       QUICK STATS
+       ========================================================================== */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.total {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .stat-icon.done {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+
+    .stat-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      margin-top: 1px;
+    }
+
+    /* ==========================================================================
+       SECTION HEADERS & ACTION BUTTONS
+       ========================================================================== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.3px;
+    }
+
+    .section-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      background: var(--color-surface-warm);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .btn-add-primary {
+      background: var(--color-primary);
+      color: var(--color-text-on-primary);
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(117, 67, 33, 0.2);
+      transition: all var(--transition-fast);
+    }
+
+    .btn-add-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn-add-primary:active {
+      transform: scale(0.96);
+    }
+
+    /* ==========================================================================
+       ADD TASK PANEL
+       ========================================================================== */
+    .add-task-panel {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+      display: none;
+      animation: slideDown 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .add-task-panel.open {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .add-task-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 10px;
+    }
+
+    .task-input {
+      width: 100%;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-warm);
+      color: var(--color-text-primary);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .task-input:focus {
+      border-color: var(--color-focus);
+      box-shadow: 0 0 0 2px var(--color-focus);
+    }
+
+    .task-input::placeholder {
+      color: var(--color-text-muted);
+      opacity: 0.75;
+    }
+
+    .add-task-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-cancel {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .btn-cancel:hover {
+      color: var(--color-text-primary);
+    }
+
+    .btn-submit-task {
+      background: var(--color-primary);
+      color: var(--color-text-on-primary);
+      border: none;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+    }
+
+    .btn-submit-task:active {
+      transform: scale(0.96);
+    }
+
+    /* ==========================================================================
+       TASK LIST & CARDS
+       ========================================================================== */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-card {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 14px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      transition: all var(--transition-fast);
+      animation: taskFadeIn 220ms ease;
+    }
+
+    @keyframes taskFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .task-card.removing {
+      opacity: 0;
+      transform: translateX(16px);
+      transition: all 180ms ease;
+    }
+
+    .task-card.completed {
+      opacity: 0.78;
+      background: var(--color-surface-card-subtle);
+    }
+
+    .custom-checkbox {
+      width: var(--todo-checkbox-size);
+      height: var(--todo-checkbox-size);
+      border-radius: 50%;
+      border: 2px solid var(--color-border);
+      background: var(--color-surface-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 180ms ease;
+    }
+
+    .custom-checkbox:hover {
+      border-color: var(--color-focus);
+    }
+
+    .custom-checkbox svg {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 160ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+
+    .task-card.completed .custom-checkbox {
+      background: var(--todo-checkbox-checked);
+      border-color: var(--todo-checkbox-checked);
+    }
+
+    .task-card.completed .custom-checkbox svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .task-content {
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      line-height: 1.35;
+      word-break: break-word;
+      transition: all 180ms ease;
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    .task-meta {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-delete-task {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .btn-delete-task:hover,
+    .btn-delete-task:focus {
+      opacity: 1;
+      color: var(--color-danger);
+      background: var(--color-danger-bg);
+    }
+
+    .btn-delete-task:active {
+      transform: scale(0.9);
+    }
+
+    /* ==========================================================================
+       EMPTY STATE
+       ========================================================================== */
+    .empty-state {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 34px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      margin: 8px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .empty-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 6px;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      line-height: 1.45;
+      max-width: 220px;
+      margin-bottom: 18px;
+    }
+
+    .btn-empty-add {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      border: 1px solid var(--color-border);
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-empty-add:active {
+      transform: scale(0.96);
+      background: var(--color-surface-warm);
+    }
+
+    /* ==========================================================================
+       TAB FOKUS — POMODORO TIMER INTERAKTIF
+       ========================================================================== */
+    .tab-page {
+      display: none;
+      animation: tabFade 180ms ease-out;
+    }
+
+    .tab-page.active {
+      display: block;
+    }
+
+    @keyframes tabFade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .focus-header-center {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .focus-header-center h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.4px;
+    }
+
+    .focus-header-center p {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-top: 3px;
+    }
+
+    /* Session Mode Cards (Fokus Belajar vs Istirahat Santai) */
+    .session-modes-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .session-mode-card {
+      background: var(--color-surface-card);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      min-height: 52px;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+      color: var(--color-text-primary);
+    }
+
+    .session-mode-card:hover {
+      border-color: var(--color-focus);
+    }
+
+    .session-mode-card.active {
+      background: var(--color-surface-warm);
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 14px rgba(117, 67, 33, 0.12);
+    }
+
+    .mode-card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .session-mode-card.active .mode-card-icon {
+      background: var(--color-primary);
+      color: var(--color-text-on-primary);
+    }
+
+    .mode-card-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+    }
+
+    .mode-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+
+    .mode-card-duration {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* Circular Timer Container */
+    .timer-ring-container {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 8px auto 26px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-circle-bg {
+      fill: none;
+      stroke: var(--focus-ring-track);
+      stroke-width: 9;
+    }
+
+    .timer-circle-progress {
+      fill: none;
+      stroke: var(--focus-progress);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-dasharray: 691;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 200ms linear;
+    }
+
+    .timer-center-info {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .timer-mode-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .timer-digits {
+      font-size: 50px;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      letter-spacing: -1.2px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    /* Semantic Status Chip without JS inline color styling */
+    .timer-status-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--color-surface-warm);
+      color: var(--color-primary);
+      border: 1px solid var(--color-border);
+      transition: all var(--transition-fast);
+    }
+
+    .timer-status-chip.chip-focusing {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+      border-color: rgba(124, 154, 90, 0.3);
+    }
+
+    .timer-status-chip.chip-paused {
+      background: var(--color-surface-warm);
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    /* Thumb-Friendly Controls */
+    .timer-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    .btn-timer-primary {
+      width: 100%;
+      max-width: 270px;
+      min-height: 52px;
+      background: var(--color-primary);
+      color: var(--color-text-on-primary);
+      border: none;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: var(--shadow-hero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-timer-primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .btn-timer-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-timer-primary.running {
+      background: var(--color-accent);
+    }
+
+    .btn-timer-secondary {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      min-height: 48px;
+      transition: color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-timer-secondary:hover {
+      color: var(--color-text-primary);
+    }
+
+    .btn-timer-secondary:active {
+      transform: scale(0.96);
+    }
+
+    /* Focus Quote / Card */
+    .cozy-card {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .cozy-avatar-mini {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cozy-quote-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      line-height: 1.4;
+    }
+
+    .cozy-quote-author {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* Accessible Dialog / Modals */
+    .focus-dialog {
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-card);
+      color: var(--color-text-primary);
+      border-radius: var(--radius-xl);
+      padding: 24px 20px;
+      max-width: 350px;
+      width: 90%;
+      margin: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      opacity: 0;
+      transition: all 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 1000;
+    }
+
+    .focus-dialog[open] {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .focus-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dialog-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-primary);
+    }
+
+    .dialog-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      line-height: 1.25;
+    }
+
+    .dialog-desc {
+      font-size: 13.5px;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-dialog-primary {
+      background: var(--color-primary);
+      color: var(--color-text-on-primary);
+      border: none;
+      padding: 13px 18px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 48px;
+      box-shadow: 0 4px 12px rgba(117, 67, 33, 0.18);
+      transition: transform var(--transition-fast);
+    }
+
+    .btn-dialog-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-dialog-secondary {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    .btn-dialog-secondary:hover {
+      color: var(--color-text-primary);
+    }
+
+    /* ==========================================================================
+       JOURNAL TAB
+       ========================================================================== */
+    .journal-header {
+      margin-bottom: 18px;
+    }
+
+    .journal-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      letter-spacing: -0.4px;
+    }
+
+    .journal-header p {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    .journal-card {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 22px;
+    }
+
+    .journal-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .journal-prompt {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .journal-date-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .journal-textarea {
+      width: 100%;
+      min-height: 140px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-warm);
+      color: var(--color-text-primary);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .journal-textarea:focus {
+      border-color: var(--color-focus);
+      box-shadow: 0 0 0 2px var(--color-focus);
+    }
+
+    .journal-textarea::placeholder {
+      color: var(--color-text-muted);
+      opacity: 0.7;
+    }
+
+    .journal-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    .char-count {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    .journal-actions-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .save-feedback {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-success);
+      opacity: 0;
+      transform: translateX(4px);
+      transition: all 180ms ease;
+    }
+
+    .save-feedback.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .btn-save-journal {
+      background: var(--journal-save-action);
+      color: var(--color-text-on-primary);
+      border: none;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-save-journal:active {
+      transform: scale(0.96);
+    }
+
+    /* Journal History */
+    .history-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-card {
+      background: var(--color-surface-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .history-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .history-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .history-date {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .history-del-btn {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      opacity: 0.5;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .history-del-btn:hover {
+      opacity: 1;
+      color: var(--color-danger);
+    }
+
+    .history-snippet {
+      font-size: 13px;
+      color: var(--color-text-primary);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .history-snippet.expanded {
+      -webkit-line-clamp: unset;
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR
+       ========================================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 420px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--color-border);
+      border-top-left-radius: var(--radius-lg);
+      border-top-right-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 12px calc(8px + env(safe-area-inset-bottom)) 12px;
+      box-shadow: var(--shadow-nav);
+      z-index: 100;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      min-height: 50px;
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-tab-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+      transition: transform var(--transition-fast), stroke var(--transition-fast);
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      transition: color var(--transition-fast);
+    }
+
+    .nav-tab-btn.active {
+      color: var(--color-primary);
+    }
+
+    .nav-tab-btn.active svg {
+      transform: translateY(-2px);
+    }
+
+    .nav-tab-btn:active {
+      transform: scale(0.92);
+    }
+
+    .active-pill-indicator {
+      position: absolute;
+      top: 4px;
+      width: 40px;
+      height: 24px;
+      background: var(--color-primary-light);
+      border-radius: var(--radius-pill);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    .nav-tab-btn.active .active-pill-indicator {
+      opacity: 1;
+    }
+
+    /* Modal / Toast helper */
+    .toast-popup {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--color-surface-warm);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-hover);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .toast-popup.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ==========================================================================
+       REDUCED MOTION SUPPORT
+       ========================================================================== */
+    @media (prefers-reduced-motion: reduce) {
+
+      .timer-circle-progress,
+      .tab-page,
+      .btn-timer-primary,
+      .session-mode-card,
+      .focus-dialog {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE PREVIEW CONTAINER -->
+  <div class="app-viewport">
+
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <main class="app-main">
+
+      <!-- ====================================================================
+           TAB 1: TUGAS (TASKS)
+           ==================================================================== -->
+      <section id="tab-tasks" class="tab-page active">
+        <!-- Personal Dashboard Header -->
+        <header class="app-header">
+          <div>
+            <div class="greeting-sub" id="live-date">
+              <!-- Dynamically populated: e.g. Monday, Sep 29 -->
+            </div>
+            <div class="greeting-title" id="greeting-text">
+              Good morning! 👋
+            </div>
+          </div>
+          <div class="header-actions">
+            <!-- Theme Switcher Button -->
+            <button class="btn-theme-toggle" id="btn-theme-toggle" aria-label="Toggle Theme"
+              title="Toggle Light/Dark Theme">
+              <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            </button>
+
+            <!-- Capybara Avatar Badge -->
+            <button class="avatar-btn" aria-label="Profil Capybara" title="Cozy Capybara">
+              <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="18" cy="19" rx="13" ry="11" fill="var(--color-accent)" />
+                <path d="M7 20C7 16 11 13 18 13C25 13 29 16 29 20C29 25 24 28 18 28C12 28 7 25 7 20Z"
+                  fill="var(--color-primary)" />
+                <circle cx="8" cy="11" r="3.2" fill="var(--brown-900)" />
+                <circle cx="28" cy="11" r="3.2" fill="var(--brown-900)" />
+                <path d="M12 17Q14 15 16 17" stroke="var(--brown-900)" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M20 17Q22 15 24 17" stroke="var(--brown-900)" stroke-width="1.8" stroke-linecap="round" />
+                <ellipse cx="18" cy="22" rx="2.5" ry="1.8" fill="var(--brown-900)" />
+                <path d="M18 24V25" stroke="var(--brown-900)" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <span class="capy-status-dot"></span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Hero Card / Daily Summary -->
+        <div class="hero-card">
+          <!-- Subtle Decorative Capybara Background Art -->
+          <svg class="hero-bg-art" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 50C15 35 25 20 45 20C65 20 85 28 90 45C95 62 80 75 55 75C30 75 25 65 20 50Z" fill="white" />
+            <circle cx="75" cy="18" r="8" fill="white" />
+          </svg>
+
+          <div class="hero-label">Today's Progress</div>
+          <div class="hero-status" id="hero-status-message">A fresh start.</div>
+          <div class="hero-subtext" id="hero-count-subtext">0 of 0 tasks completed</div>
+
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="task-progress-fill"></div>
+          </div>
+
+          <div class="progress-metrics">
+            <span id="hero-progress-percent">0%</span>
+            <span>Stay cozy 🦫</span>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="stat-card">
+            <div class="stat-icon total">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-total-tasks">0</div>
+              <div class="stat-label">Total Tasks</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon done">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div class="stat-num" id="stat-done-tasks">0</div>
+              <div class="stat-label">Completed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Section Header -->
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <h2 class="section-title">Today's Tasks</h2>
+            <span class="section-badge" id="tasks-badge">0</span>
+          </div>
+          <button class="btn-add-primary" id="btn-toggle-add" aria-label="Tambah Tugas">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"
+              stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add</span>
+          </button>
+        </div>
+
+        <!-- Inline Add Task Panel -->
+        <div class="add-task-panel" id="add-task-panel">
+          <div class="add-task-title">New task</div>
+          <input type="text" class="task-input" id="new-task-input" placeholder="What needs to be done?" maxlength="120"
+            autocomplete="off">
+          <div class="add-task-actions">
+            <button class="btn-cancel" id="btn-cancel-add">Cancel</button>
+            <button class="btn-submit-task" id="btn-submit-task">Add Task</button>
+          </div>
+        </div>
+
+        <!-- Task List Items -->
+        <div class="task-list" id="task-list-container">
+          <!-- Dynamically inserted task cards -->
+        </div>
+
+        <!-- Empty State (Shown when tasks list is empty) -->
+        <div class="empty-state" id="empty-tasks-state" style="display: none;">
+          <div class="empty-icon-wrap">
+            <svg width="38" height="38" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="18" cy="19" rx="12" ry="10" fill="var(--color-accent)" />
+              <path d="M8 20C8 16.5 12 14 18 14C24 14 28 16.5 28 20C28 24.5 23.5 27 18 27C12.5 27 8 24.5 8 20Z"
+                fill="var(--color-primary)" />
+              <circle cx="9" cy="12" r="2.8" fill="var(--brown-900)" />
+              <circle cx="27" cy="12" r="2.8" fill="var(--brown-900)" />
+              <path d="M13 18Q15 16 17 18" stroke="var(--brown-900)" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M19 18Q21 16 23 18" stroke="var(--brown-900)" stroke-width="1.8" stroke-linecap="round" />
+              <ellipse cx="18" cy="22" rx="2" ry="1.5" fill="var(--brown-900)" />
+            </svg>
+          </div>
+          <div class="empty-title">Nothing here yet.</div>
+          <div class="empty-desc">Start small with one simple thing you can finish today.</div>
+          <button class="btn-empty-add" id="btn-empty-add-trigger">+ Add a task</button>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TAB 2: FOKUS (POMODORO TIMER INTERAKTIF)
+           ==================================================================== -->
+      <section id="tab-focus" class="tab-page">
+        <div class="focus-header-center">
+          <h1>Fokus</h1>
+          <p>Satu hal dalam satu waktu.</p>
+        </div>
+
+        <!-- Session Modes Selector (Fokus Belajar 25m vs Istirahat Santai 5m) -->
+        <div class="session-modes-group" role="tablist" aria-label="Mode Sesi">
+          <button class="session-mode-card active" id="mode-focus-btn" data-mode="focus" data-minutes="25" role="tab"
+            aria-selected="true">
+            <div class="mode-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+            </div>
+            <div class="mode-card-text">
+              <span class="mode-card-title">Fokus Belajar</span>
+              <span class="mode-card-duration">25 Menit</span>
+            </div>
+          </button>
+
+          <button class="session-mode-card" id="mode-break-btn" data-mode="break" data-minutes="5" role="tab"
+            aria-selected="false">
+            <div class="mode-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+            </div>
+            <div class="mode-card-text">
+              <span class="mode-card-title">Istirahat Santai</span>
+              <span class="mode-card-duration">5 Menit</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Circular Progress Timer -->
+        <div class="timer-ring-container">
+          <svg class="timer-svg" viewBox="0 0 250 250" aria-hidden="true">
+            <!-- Background track ring -->
+            <circle class="timer-circle-bg" cx="125" cy="125" r="110" />
+            <!-- Active progress ring (perimeter ~ 2 * PI * 110 = 691.15) -->
+            <circle class="timer-circle-progress" id="timer-progress-ring" cx="125" cy="125" r="110" />
+          </svg>
+
+          <div class="timer-center-info">
+            <span class="timer-mode-tag" id="timer-mode-label">Fokus Belajar</span>
+            <div class="timer-digits" id="timer-display" role="timer" aria-live="off">25:00</div>
+            <div class="timer-status-chip chip-ready" id="timer-status-chip">Siap</div>
+          </div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="timer-controls">
+          <button class="btn-timer-primary" id="btn-timer-toggle" aria-label="Mulai sesi fokus">
+            <svg id="timer-icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span id="timer-btn-text">Mulai</span>
+          </button>
+          <button class="btn-timer-secondary" id="btn-timer-reset" aria-label="Atur ulang timer">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l6.73-1.19" />
+            </svg>
+            <span>Atur Ulang</span>
+          </button>
+        </div>
+
+        <!-- Cozy Productivity Quote Card -->
+        <div class="cozy-card">
+          <div class="cozy-avatar-mini">
+            <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+              <ellipse cx="18" cy="19" rx="12" ry="10" fill="var(--color-accent)" />
+              <circle cx="9" cy="12" r="2.8" fill="var(--brown-900)" />
+              <circle cx="27" cy="12" r="2.8" fill="var(--brown-900)" />
+              <ellipse cx="18" cy="22" rx="2" ry="1.5" fill="var(--brown-900)" />
+            </svg>
+          </div>
+          <div>
+            <div class="cozy-quote-text" id="focus-quote">“Small progress is still progress.”</div>
+            <div class="cozy-quote-author">Pengingat Santai 🦫</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TAB 3: JURNAL (JOURNAL)
+           ==================================================================== -->
+      <section id="tab-journal" class="tab-page">
+        <div class="journal-header">
+          <h1>Daily Journal</h1>
+          <p>A few words about today.</p>
+        </div>
+
+        <!-- Journal Input Card -->
+        <div class="journal-card">
+          <div class="journal-card-top">
+            <span class="journal-prompt">How was your day?</span>
+            <span class="journal-date-badge" id="journal-today-badge">Today</span>
+          </div>
+
+          <textarea class="journal-textarea" id="journal-textarea"
+            placeholder="Write anything... What made you smile, what did you learn, or what are you grateful for today?"
+            maxlength="1000"></textarea>
+
+          <div class="journal-card-footer">
+            <span class="char-count" id="char-count">0/1000</span>
+            <div class="journal-actions-wrap">
+              <span class="save-feedback" id="save-feedback">Saved ✓</span>
+              <button class="btn-save-journal" id="btn-save-journal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span>Save Journal</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Journal Previous Entries -->
+        <div class="history-section-title">
+          <span>Previous Entries</span>
+          <span class="section-badge" id="history-badge">0</span>
+        </div>
+
+        <div class="history-list" id="history-list-container">
+          <!-- Dynamically inserted previous entries -->
+        </div>
+
+        <!-- Empty history state -->
+        <div class="empty-state" id="empty-history-state" style="display: none; padding: 24px 16px;">
+          <div class="empty-title" style="font-size: 14px;">Your thoughts can live here.</div>
+          <div class="empty-desc" style="font-size: 12px; margin-bottom: 0;">Saved journal reflections will be archived
+            here.</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         BOTTOM NAVIGATION BAR
+         ==================================================================== -->
+    <nav class="bottom-nav" aria-label="Navigasi Aplikasi">
+      <button class="nav-tab-btn active" data-tab="tasks" aria-label="Tab Tugas">
+        <span class="active-pill-indicator"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"></path>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+        <span class="nav-label">Tugas</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="focus" aria-label="Tab Fokus">
+        <span class="active-pill-indicator"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span class="nav-label">Fokus</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="journal" aria-label="Tab Jurnal">
+        <span class="active-pill-indicator"></span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        <span class="nav-label">Jurnal</span>
+      </button>
+    </nav>
+
+    <!-- Subtle Toast Notification Popup -->
+    <div class="toast-popup" id="toast-popup">Notification</div>
+
+    <!-- ====================================================================
+         ACCESSIBLE DIALOGS FOR FOCUS SESSION
+         ==================================================================== -->
+    <!-- Completion & Reflection Dialog -->
+    <dialog id="focus-completion-dialog" class="focus-dialog" aria-labelledby="completion-dialog-title"
+      aria-describedby="completion-dialog-desc">
+      <div class="dialog-header">
+        <div class="dialog-icon" id="dialog-icon-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h2 class="dialog-title" id="completion-dialog-title">Sesi Fokus Selesai! 🎉</h2>
+        </div>
+      </div>
+      <p class="dialog-desc" id="completion-dialog-desc">
+        Kamu baru saja menyelesaikan 25 menit sesi belajar. Bagaimana belajarmu tadi? Yuk catat sedikit refleksimu di
+        Jurnal harian.
+      </p>
+      <div class="dialog-actions">
+        <button class="btn-dialog-primary" id="btn-dialog-action">Buka Jurnal</button>
+        <button class="btn-dialog-secondary" id="btn-dialog-dismiss">Nanti Saja</button>
+      </div>
+    </dialog>
+
+    <!-- Mode Change Confirmation Dialog (Safe UX) -->
+    <dialog id="mode-confirm-dialog" class="focus-dialog" aria-labelledby="confirm-dialog-title"
+      aria-describedby="confirm-dialog-desc">
+      <div class="dialog-header">
+        <div class="dialog-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div>
+          <h2 class="dialog-title" id="confirm-dialog-title">Ganti Mode Sesi?</h2>
+        </div>
+      </div>
+      <p class="dialog-desc" id="confirm-dialog-desc">
+        Timer sedang berjalan. Jika berganti mode sekarang, sesi saat ini akan diatur ulang.
+      </p>
+      <div class="dialog-actions">
+        <button class="btn-dialog-primary" id="btn-confirm-switch">Ya, Ganti Mode</button>
+        <button class="btn-dialog-secondary" id="btn-cancel-switch">Lanjutkan Sesi</button>
+      </div>
+    </dialog>
+
+  </div>
+
+  <!-- ====================================================================
+       VANILLA JAVASCRIPT APPLICATION LOGIC
+       ==================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      const STORAGE_KEY = 'productivity_hub_cozy_app_v1';
+      const RING_CIRCUMFERENCE = 691.15; // 2 * Math.PI * 110
+
+      // Application State
+      let state = {
+        theme: 'light',
+        tasks: [],
+        journal: '',
+        journalHistory: [],
+        activeTab: 'tasks',
+        timer: {
+          mode: 'focus', // 'focus' (25 min) | 'break' (5 min)
+          duration: 1500, // 25 minutes in seconds
+          remaining: 1500,
+          running: false,
+          paused: false,
+          endTime: null
+        }
+      };
+
+      let timerInterval = null;
+      let pendingModeSwitch = null;
+      let audioCtx = null;
+
+      // Cozy productivity quotes
+      const quotes = [
+        "“Small progress is still progress.”",
+        "“Focus on the step in front of you, not the whole mountain.”",
+        "“Peace of mind starts with one quiet task.”",
+        "“Rest when needed, breathe with ease.”",
+        "“Done is better than perfect.”"
+      ];
+
+      /* ====================================================================
+         STORAGE UTILITIES
+         ==================================================================== */
+      function loadData() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed.theme === 'dark' || parsed.theme === 'light') {
+              state.theme = parsed.theme;
+            }
+            if (Array.isArray(parsed.tasks)) state.tasks = parsed.tasks;
+            if (typeof parsed.journal === 'string') state.journal = parsed.journal;
+            if (Array.isArray(parsed.journalHistory)) state.journalHistory = parsed.journalHistory;
+
+            // Restore Pomodoro Timer State
+            if (parsed.timer && typeof parsed.timer === 'object') {
+              const t = parsed.timer;
+              if (t.mode === 'focus' || t.mode === 'break') {
+                state.timer.mode = t.mode;
+                state.timer.duration = t.mode === 'break' ? 300 : 1500;
+              }
+              if (typeof t.remaining === 'number' && t.remaining >= 0 && t.remaining <= state.timer.duration) {
+                state.timer.remaining = t.remaining;
+              } else {
+                state.timer.remaining = state.timer.duration;
+              }
+              // If was running with endTime
+              if (t.running && t.endTime) {
+                const now = Date.now();
+                const left = Math.ceil((t.endTime - now) / 1000);
+                if (left > 0) {
+                  state.timer.remaining = left;
+                  state.timer.running = true;
+                  state.timer.paused = false;
+                  state.timer.endTime = t.endTime;
+                } else {
+                  state.timer.remaining = 0;
+                  state.timer.running = false;
+                  state.timer.paused = false;
+                  state.timer.endTime = null;
+                }
+              } else if (t.paused) {
+                state.timer.running = false;
+                state.timer.paused = true;
+                state.timer.endTime = null;
+              } else {
+                state.timer.running = false;
+                state.timer.paused = false;
+                state.timer.endTime = null;
+              }
+            }
+          } else {
+            // First open default starter tasks
+            state.tasks = [
+              {
+                id: 'task-init-1',
+                title: 'Review my priorities for today',
+                completed: false,
+                createdAt: Date.now() - 3600000
+              },
+              {
+                id: 'task-init-2',
+                title: 'Take a mindful 5-minute breather ☕',
+                completed: true,
+                createdAt: Date.now() - 7200000
+              }
+            ];
+            state.journal = '';
+            state.journalHistory = [
+              {
+                id: 'entry-init-1',
+                date: 'Yesterday',
+                fullDate: new Date(Date.now() - 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                content: 'Reflected on the week and set realistic goals. Staying calm and steady makes all the difference.'
+              }
+            ];
+            saveData();
+          }
+        } catch (e) {
+          console.warn('Storage unavailable or access denied:', e);
+        }
+      }
+
+      function saveData() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            theme: state.theme,
+            tasks: state.tasks,
+            journal: state.journal,
+            journalHistory: state.journalHistory,
+            timer: {
+              mode: state.timer.mode,
+              duration: state.timer.duration,
+              remaining: state.timer.remaining,
+              running: state.timer.running,
+              paused: state.timer.paused,
+              endTime: state.timer.endTime
+            }
+          }));
+        } catch (e) {
+          console.warn('Unable to persist to localStorage:', e);
+        }
+      }
+
+      /* ====================================================================
+         NATIVE WEB AUDIO API (PLEASANT COZY CHIME ON COMPLETION)
+         ==================================================================== */
+      function initAudioContext() {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtx && AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+        } catch (err) {
+          console.warn('AudioContext init non-fatal:', err);
+        }
+      }
+
+      function playCompletionChime() {
+        try {
+          initAudioContext();
+          if (!audioCtx) return;
+
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          // Warm double-tone ramp (D5: 587.33Hz -> A5: 880Hz)
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.10);
+
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.exponentialRampToValueAtTime(0.14, now + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.36);
+        } catch (err) {
+          console.warn('Web Audio playback failed or blocked gracefully:', err);
+        }
+      }
+
+      /* ====================================================================
+         THEME SWITCHER LOGIC (GLOBAL ROOT SWITCHING ONLY)
+         ==================================================================== */
+      function applyTheme(themeName) {
+        state.theme = themeName;
+        document.documentElement.dataset.theme = themeName;
+
+        const toggleBtn = document.getElementById('btn-theme-toggle');
+        if (toggleBtn) {
+          if (themeName === 'dark') {
+            toggleBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            `;
+          } else {
+            toggleBtn.innerHTML = `
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+            `;
+          }
+        }
+      }
+
+      function toggleTheme() {
+        const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme);
+        saveData();
+        showToast(nextTheme === 'dark' ? 'Tema Gelap Aktif 🌙' : 'Tema Terang Aktif ☀️');
+      }
+
+      /* ====================================================================
+         DATE & GREETINGS
+         ==================================================================== */
+      function updateHeaderDates() {
+        const now = new Date();
+        const optionsDate = { weekday: 'long', month: 'short', day: 'numeric' };
+        const dateStr = now.toLocaleDateString('en-US', optionsDate);
+
+        const liveDateEl = document.getElementById('live-date');
+        if (liveDateEl) {
+          liveDateEl.textContent = dateStr;
+        }
+
+        const journalBadge = document.getElementById('journal-today-badge');
+        if (journalBadge) {
+          journalBadge.textContent = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // Dynamic Greeting based on hour
+        const hour = now.getHours();
+        let greeting = 'Good morning! 👋';
+        if (hour >= 12 && hour < 17) {
+          greeting = 'Good afternoon! ☀️';
+        } else if (hour >= 17 && hour < 21) {
+          greeting = 'Good evening! ☕';
+        } else if (hour >= 21 || hour < 5) {
+          greeting = 'Ready for tonight? 🌙';
+        }
+
+        const greetingEl = document.getElementById('greeting-text');
+        if (greetingEl) {
+          greetingEl.textContent = greeting;
+        }
+      }
+
+      /* ====================================================================
+         TOAST HELPER
+         ==================================================================== */
+      let toastTimeout = null;
+      function showToast(text) {
+        const toast = document.getElementById('toast-popup');
+        if (!toast) return;
+        toast.textContent = text;
+        toast.classList.add('visible');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('visible');
+        }, 2200);
+      }
+
+      /* ====================================================================
+         TASKS MODULE
+         ==================================================================== */
+      function renderTasks() {
+        const container = document.getElementById('task-list-container');
+        const emptyState = document.getElementById('empty-tasks-state');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        if (state.tasks.length === 0) {
+          emptyState.style.display = 'flex';
+        } else {
+          emptyState.style.display = 'none';
+
+          const sorted = [...state.tasks].sort((a, b) => {
+            if (a.completed === b.completed) {
+              return b.createdAt - a.createdAt;
+            }
+            return a.completed ? 1 : -1;
+          });
+
+          sorted.forEach(task => {
+            const card = document.createElement('div');
+            card.className = `task-card ${task.completed ? 'completed' : ''}`;
+            card.id = `card-${task.id}`;
+
+            card.innerHTML = `
+              <div class="custom-checkbox" role="checkbox" aria-checked="${task.completed}" tabindex="0" title="${task.completed ? 'Mark incomplete' : 'Mark complete'}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="task-content">
+                <div class="task-title">${escapeHTML(task.title)}</div>
+                <div class="task-meta">
+                  <span>${task.completed ? 'Completed' : 'Today'}</span>
+                </div>
+              </div>
+              <button class="btn-delete-task" aria-label="Delete task" title="Delete">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            `;
+
+            // Toggle Complete Action
+            const checkbox = card.querySelector('.custom-checkbox');
+            const content = card.querySelector('.task-content');
+            const toggleHandler = () => toggleTask(task.id);
+            checkbox.addEventListener('click', toggleHandler);
+            content.addEventListener('click', toggleHandler);
+            checkbox.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleHandler();
+              }
+            });
+
+            // Delete Action
+            const delBtn = card.querySelector('.btn-delete-task');
+            delBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              deleteTask(task.id);
+            });
+
+            container.appendChild(card);
+          });
+        }
+
+        updateTaskMetrics();
+      }
+
+      function updateTaskMetrics() {
+        const total = state.tasks.length;
+        const done = state.tasks.filter(t => t.completed).length;
+        const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+        const fill = document.getElementById('task-progress-fill');
+        if (fill) fill.style.width = `${percent}%`;
+
+        const percentEl = document.getElementById('hero-progress-percent');
+        if (percentEl) percentEl.textContent = `${percent}%`;
+
+        const countSub = document.getElementById('hero-count-subtext');
+        if (countSub) countSub.textContent = `${done} of ${total} tasks completed`;
+
+        const heroStatus = document.getElementById('hero-status-message');
+        if (heroStatus) {
+          if (total === 0) {
+            heroStatus.textContent = 'A fresh start.';
+          } else if (percent === 100) {
+            heroStatus.textContent = "Everything's done! 🦫";
+          } else if (percent >= 50) {
+            heroStatus.textContent = "You're getting there.";
+          } else {
+            heroStatus.textContent = "Let's get moving.";
+          }
+        }
+
+        const statTotal = document.getElementById('stat-total-tasks');
+        const statDone = document.getElementById('stat-done-tasks');
+        const tasksBadge = document.getElementById('tasks-badge');
+
+        if (statTotal) statTotal.textContent = total.toString().padStart(2, '0');
+        if (statDone) statDone.textContent = done.toString().padStart(2, '0');
+        if (tasksBadge) tasksBadge.textContent = total;
+      }
+
+      function addTask(title) {
+        const cleanTitle = title.trim();
+        if (!cleanTitle) return;
+
+        const newTask = {
+          id: 'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+          title: cleanTitle,
+          completed: false,
+          createdAt: Date.now()
+        };
+
+        state.tasks.unshift(newTask);
+        saveData();
+        renderTasks();
+        showToast('Task added');
+      }
+
+      function toggleTask(id) {
+        const target = state.tasks.find(t => t.id === id);
+        if (target) {
+          target.completed = !target.completed;
+          saveData();
+          renderTasks();
+        }
+      }
+
+      function deleteTask(id) {
+        const card = document.getElementById(`card-${id}`);
+        if (card) {
+          card.classList.add('removing');
+          setTimeout(() => {
+            state.tasks = state.tasks.filter(t => t.id !== id);
+            saveData();
+            renderTasks();
+            showToast('Task removed');
+          }, 180);
+        } else {
+          state.tasks = state.tasks.filter(t => t.id !== id);
+          saveData();
+          renderTasks();
+        }
+      }
+
+      /* ====================================================================
+         FOCUS TAB (POMODORO TIMER INTERAKTIF WITH ACCURATE TIMESTAMP)
+         ==================================================================== */
+      function setTimerMode(modeKey, force = false) {
+        if (state.timer.mode === modeKey && !force) return;
+
+        // If timer is running, request safe confirmation
+        if (state.timer.running && !force) {
+          pendingModeSwitch = modeKey;
+          const confirmDialog = document.getElementById('mode-confirm-dialog');
+          if (confirmDialog && typeof confirmDialog.showModal === 'function') {
+            confirmDialog.showModal();
+          } else {
+            // Fallback if dialog not supported
+            applyModeSwitch(modeKey);
+          }
+          return;
+        }
+
+        applyModeSwitch(modeKey);
+      }
+
+      function applyModeSwitch(modeKey) {
+        stopTimerLoop();
+        state.timer.mode = modeKey;
+        state.timer.duration = modeKey === 'break' ? 300 : 1500; // 5 min vs 25 min
+        state.timer.remaining = state.timer.duration;
+        state.timer.running = false;
+        state.timer.paused = false;
+        state.timer.endTime = null;
+
+        updateModeCardUI();
+        updateTimerDisplay();
+        saveData();
+      }
+
+      function updateModeCardUI() {
+        const btnFocus = document.getElementById('mode-focus-btn');
+        const btnBreak = document.getElementById('mode-break-btn');
+        const modeLabel = document.getElementById('timer-mode-label');
+
+        if (state.timer.mode === 'focus') {
+          if (btnFocus) {
+            btnFocus.classList.add('active');
+            btnFocus.setAttribute('aria-selected', 'true');
+          }
+          if (btnBreak) {
+            btnBreak.classList.remove('active');
+            btnBreak.setAttribute('aria-selected', 'false');
+          }
+          if (modeLabel) modeLabel.textContent = 'Fokus Belajar';
+        } else {
+          if (btnBreak) {
+            btnBreak.classList.add('active');
+            btnBreak.setAttribute('aria-selected', 'true');
+          }
+          if (btnFocus) {
+            btnFocus.classList.remove('active');
+            btnFocus.setAttribute('aria-selected', 'false');
+          }
+          if (modeLabel) modeLabel.textContent = 'Istirahat Santai';
+        }
+      }
+
+      function updateTimerDisplay() {
+        const display = document.getElementById('timer-display');
+        const ring = document.getElementById('timer-progress-ring');
+        const chip = document.getElementById('timer-status-chip');
+        const btnToggle = document.getElementById('btn-timer-toggle');
+        const btnText = document.getElementById('timer-btn-text');
+        const iconPlay = document.getElementById('timer-icon-play');
+
+        const totalSecs = Math.max(0, state.timer.remaining);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        const timeString = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        if (display) display.textContent = timeString;
+
+        // Calculate circular ring stroke offset
+        // Offset range: 0 (empty progress) to -RING_CIRCUMFERENCE (full progress)
+        const fraction = (state.timer.duration - totalSecs) / state.timer.duration;
+        const offset = -fraction * RING_CIRCUMFERENCE;
+        if (ring) ring.style.strokeDashoffset = offset;
+
+        // Semantic CSS classes for status chip
+        if (chip) {
+          chip.classList.remove('chip-focusing', 'chip-paused', 'chip-ready');
+          if (state.timer.running) {
+            chip.textContent = state.timer.mode === 'break' ? 'Istirahat...' : 'Fokus...';
+            chip.classList.add('chip-focusing');
+          } else if (state.timer.paused) {
+            chip.textContent = 'Dijeda';
+            chip.classList.add('chip-paused');
+          } else if (totalSecs === 0) {
+            chip.textContent = 'Selesai';
+            chip.classList.add('chip-ready');
+          } else {
+            chip.textContent = 'Siap';
+            chip.classList.add('chip-ready');
+          }
+        }
+
+        // Button state handling
+        if (btnToggle) {
+          btnToggle.classList.remove('running');
+          if (state.timer.running) {
+            btnToggle.classList.add('running');
+            if (btnText) btnText.textContent = 'Jeda';
+            if (iconPlay) {
+              iconPlay.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+            }
+          } else if (state.timer.paused) {
+            if (btnText) btnText.textContent = 'Lanjutkan';
+            if (iconPlay) {
+              iconPlay.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+            }
+          } else if (totalSecs === 0) {
+            if (btnText) btnText.textContent = 'Mulai Lagi';
+            if (iconPlay) {
+              iconPlay.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+            }
+          } else {
+            if (btnText) btnText.textContent = 'Mulai';
+            if (iconPlay) {
+              iconPlay.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+            }
+          }
+        }
+      }
+
+      function stopTimerLoop() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      function startTimer() {
+        if (state.timer.running) return;
+
+        // Initialize audio context safely on user gesture
+        initAudioContext();
+
+        // If timer reached zero or completed, reset remaining before starting
+        if (state.timer.remaining <= 0) {
+          state.timer.remaining = state.timer.duration;
+        }
+
+        state.timer.running = true;
+        state.timer.paused = false;
+        // Accurate timestamp calculation: set target end time
+        state.timer.endTime = Date.now() + (state.timer.remaining * 1000);
+
+        stopTimerLoop();
+        updateTimerDisplay();
+        saveData();
+
+        // High frequency tick (200ms) for instant responsiveness & sync
+        timerInterval = setInterval(() => {
+          const now = Date.now();
+          const msLeft = Math.max(0, state.timer.endTime - now);
+          state.timer.remaining = Math.ceil(msLeft / 1000);
+
+          if (msLeft <= 0) {
+            state.timer.remaining = 0;
+            updateTimerDisplay();
+            completeTimer();
+          } else {
+            updateTimerDisplay();
+          }
+        }, 200);
+      }
+
+      function pauseTimer() {
+        if (!state.timer.running) return;
+
+        state.timer.running = false;
+        state.timer.paused = true;
+        stopTimerLoop();
+
+        if (state.timer.endTime) {
+          const now = Date.now();
+          state.timer.remaining = Math.max(0, Math.ceil((state.timer.endTime - now) / 1000));
+          state.timer.endTime = null;
+        }
+
+        updateTimerDisplay();
+        saveData();
+      }
+
+      function resetTimer() {
+        stopTimerLoop();
+        state.timer.running = false;
+        state.timer.paused = false;
+        state.timer.endTime = null;
+        state.timer.remaining = state.timer.duration;
+
+        updateTimerDisplay();
+        saveData();
+      }
+
+      function completeTimer() {
+        stopTimerLoop();
+        state.timer.running = false;
+        state.timer.paused = false;
+        state.timer.endTime = null;
+        state.timer.remaining = 0;
+
+        updateTimerDisplay();
+        saveData();
+
+        // 1. Play gentle Web Audio API chime
+        playCompletionChime();
+
+        // 2. Open tailored Accessible Completion Dialog
+        openCompletionDialog();
+
+        rotateQuote();
+      }
+
+      function openCompletionDialog() {
+        const dialog = document.getElementById('focus-completion-dialog');
+        const titleEl = document.getElementById('completion-dialog-title');
+        const descEl = document.getElementById('completion-dialog-desc');
+        const actionBtn = document.getElementById('btn-dialog-action');
+        const dismissBtn = document.getElementById('btn-dialog-dismiss');
+
+        if (!dialog) return;
+
+        if (state.timer.mode === 'focus') {
+          if (titleEl) titleEl.textContent = 'Sesi Fokus Selesai! 🎉';
+          if (descEl) descEl.textContent = 'Kamu baru saja menyelesaikan 25 menit sesi belajar. Bagaimana belajarmu tadi? Yuk catat sedikit refleksimu di Jurnal harian.';
+          if (actionBtn) {
+            actionBtn.textContent = 'Buka Jurnal';
+            actionBtn.onclick = () => {
+              dialog.close();
+              switchTab('journal');
+            };
+          }
+          if (dismissBtn) {
+            dismissBtn.textContent = 'Nanti Saja';
+            dismissBtn.onclick = () => dialog.close();
+          }
+        } else {
+          // Break completion
+          if (titleEl) titleEl.textContent = 'Istirahat Selesai! ☕';
+          if (descEl) descEl.textContent = 'Pikiran sudah kembali segar dan rileks. Siap untuk memulai sesi fokus belajar berikutnya?';
+          if (actionBtn) {
+            actionBtn.textContent = 'Mulai Fokus Belajar';
+            actionBtn.onclick = () => {
+              dialog.close();
+              setTimerMode('focus', true);
+            };
+          }
+          if (dismissBtn) {
+            dismissBtn.textContent = 'Tutup';
+            dismissBtn.onclick = () => dialog.close();
+          }
+        }
+
+        if (typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        }
+      }
+
+      function rotateQuote() {
+        const quoteEl = document.getElementById('focus-quote');
+        if (!quoteEl) return;
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteEl.textContent = randomQuote;
+      }
+
+      /* ====================================================================
+         JOURNAL MODULE
+         ==================================================================== */
+      function initJournal() {
+        const textarea = document.getElementById('journal-textarea');
+        const charCount = document.getElementById('char-count');
+        if (!textarea) return;
+
+        textarea.value = state.journal;
+        if (charCount) charCount.textContent = `${state.journal.length}/1000`;
+
+        textarea.addEventListener('input', () => {
+          state.journal = textarea.value;
+          if (charCount) charCount.textContent = `${textarea.value.length}/1000`;
+        });
+
+        renderJournalHistory();
+      }
+
+      function saveJournalEntry() {
+        const textarea = document.getElementById('journal-textarea');
+        const feedback = document.getElementById('save-feedback');
+        if (!textarea) return;
+
+        const content = textarea.value.trim();
+        if (!content) {
+          showToast('Tulis sesuatu sebelum menyimpan');
+          return;
+        }
+
+        const now = new Date();
+        const fullDate = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const shortDate = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+        const newEntry = {
+          id: 'entry-' + Date.now(),
+          date: shortDate,
+          fullDate: fullDate,
+          content: content
+        };
+
+        state.journalHistory.unshift(newEntry);
+        state.journal = content;
+        saveData();
+        renderJournalHistory();
+
+        if (feedback) {
+          feedback.classList.add('show');
+          setTimeout(() => feedback.classList.remove('show'), 2000);
+        }
+        showToast('Jurnal tersimpan ✓');
+      }
+
+      function renderJournalHistory() {
+        const container = document.getElementById('history-list-container');
+        const emptyState = document.getElementById('empty-history-state');
+        const historyBadge = document.getElementById('history-badge');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        if (state.journalHistory.length === 0) {
+          emptyState.style.display = 'block';
+          if (historyBadge) historyBadge.textContent = '0';
+        } else {
+          emptyState.style.display = 'none';
+          if (historyBadge) historyBadge.textContent = state.journalHistory.length;
+
+          state.journalHistory.forEach(entry => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+              <div class="history-card-top">
+                <span class="history-date">${escapeHTML(entry.fullDate || entry.date)}</span>
+                <button class="history-del-btn" aria-label="Delete entry" title="Delete entry">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+              <div class="history-snippet">${escapeHTML(entry.content)}</div>
+            `;
+
+            const snippet = card.querySelector('.history-snippet');
+            card.addEventListener('click', () => {
+              snippet.classList.toggle('expanded');
+            });
+
+            const delBtn = card.querySelector('.history-del-btn');
+            delBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              state.journalHistory = state.journalHistory.filter(h => h.id !== entry.id);
+              saveData();
+              renderJournalHistory();
+              showToast('Entri dihapus');
+            });
+
+            container.appendChild(card);
+          });
+        }
+      }
+
+      /* ====================================================================
+         TAB SWITCHING NAVIGATION
+         ==================================================================== */
+      function switchTab(tabId) {
+        state.activeTab = tabId;
+
+        const navButtons = document.querySelectorAll('.nav-tab-btn');
+        navButtons.forEach(btn => {
+          if (btn.getAttribute('data-tab') === tabId) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+
+        const pages = document.querySelectorAll('.tab-page');
+        pages.forEach(page => {
+          if (page.id === `tab-${tabId}`) {
+            page.classList.add('active');
+          } else {
+            page.classList.remove('active');
+          }
+        });
+
+        const main = document.querySelector('.app-main');
+        if (main) main.scrollTop = 0;
+      }
+
+      /* ====================================================================
+         HELPERS
+         ==================================================================== */
+      function escapeHTML(str) {
+        if (!str) return '';
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      /* ====================================================================
+         INITIALIZATION & EVENT BINDINGS
+         ==================================================================== */
+      function init() {
+        loadData();
+        applyTheme(state.theme);
+        updateHeaderDates();
+
+        // Render sections
+        renderTasks();
+        updateModeCardUI();
+        updateTimerDisplay();
+        initJournal();
+
+        // If timer was running on reload, start loop
+        if (state.timer.running && state.timer.endTime) {
+          startTimer();
+        }
+
+        // Theme toggle handler
+        const btnThemeToggle = document.getElementById('btn-theme-toggle');
+        if (btnThemeToggle) {
+          btnThemeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Tab Navigation click handlers
+        const navButtons = document.querySelectorAll('.nav-tab-btn');
+        navButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-tab');
+            switchTab(targetTab);
+          });
+        });
+
+        // Inline Add Task Panel Handlers
+        const btnToggleAdd = document.getElementById('btn-toggle-add');
+        const addTaskPanel = document.getElementById('add-task-panel');
+        const taskInput = document.getElementById('new-task-input');
+        const btnCancelAdd = document.getElementById('btn-cancel-add');
+        const btnSubmitTask = document.getElementById('btn-submit-task');
+        const btnEmptyAddTrigger = document.getElementById('btn-empty-add-trigger');
+
+        const openAddPanel = () => {
+          addTaskPanel.classList.add('open');
+          taskInput.focus();
+        };
+
+        const closeAddPanel = () => {
+          addTaskPanel.classList.remove('open');
+          taskInput.value = '';
+        };
+
+        if (btnToggleAdd) btnToggleAdd.addEventListener('click', openAddPanel);
+        if (btnEmptyAddTrigger) btnEmptyAddTrigger.addEventListener('click', openAddPanel);
+        if (btnCancelAdd) btnCancelAdd.addEventListener('click', closeAddPanel);
+
+        if (btnSubmitTask) {
+          btnSubmitTask.addEventListener('click', () => {
+            if (taskInput.value.trim()) {
+              addTask(taskInput.value);
+              closeAddPanel();
+            }
+          });
+        }
+
+        if (taskInput) {
+          taskInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (taskInput.value.trim()) {
+                addTask(taskInput.value);
+                closeAddPanel();
+              }
+            } else if (e.key === 'Escape') {
+              closeAddPanel();
+            }
+          });
+        }
+
+        // Pomodoro Session Mode Selectors (Fokus Belajar vs Istirahat Santai)
+        const btnModeFocus = document.getElementById('mode-focus-btn');
+        const btnModeBreak = document.getElementById('mode-break-btn');
+
+        if (btnModeFocus) {
+          btnModeFocus.addEventListener('click', () => setTimerMode('focus'));
+        }
+        if (btnModeBreak) {
+          btnModeBreak.addEventListener('click', () => setTimerMode('break'));
+        }
+
+        // Mode switch confirmation dialog handlers
+        const confirmDialog = document.getElementById('mode-confirm-dialog');
+        const btnConfirmSwitch = document.getElementById('btn-confirm-switch');
+        const btnCancelSwitch = document.getElementById('btn-cancel-switch');
+
+        if (btnConfirmSwitch) {
+          btnConfirmSwitch.addEventListener('click', () => {
+            if (confirmDialog && typeof confirmDialog.close === 'function') {
+              confirmDialog.close();
+            }
+            if (pendingModeSwitch) {
+              setTimerMode(pendingModeSwitch, true);
+              pendingModeSwitch = null;
+            }
+          });
+        }
+
+        if (btnCancelSwitch) {
+          btnCancelSwitch.addEventListener('click', () => {
+            if (confirmDialog && typeof confirmDialog.close === 'function') {
+              confirmDialog.close();
+            }
+            pendingModeSwitch = null;
+          });
+        }
+
+        // Timer Primary Button (Mulai / Jeda / Lanjutkan / Mulai Lagi)
+        const btnTimerToggle = document.getElementById('btn-timer-toggle');
+        const btnTimerReset = document.getElementById('btn-timer-reset');
+
+        if (btnTimerToggle) {
+          btnTimerToggle.addEventListener('click', () => {
+            if (state.timer.running) {
+              pauseTimer();
+            } else {
+              startTimer();
+            }
+          });
+        }
+
+        if (btnTimerReset) {
+          btnTimerReset.addEventListener('click', resetTimer);
+        }
+
+        // Journal Save Button
+        const btnSaveJournal = document.getElementById('btn-save-journal');
+        if (btnSaveJournal) {
+          btnSaveJournal.addEventListener('click', saveJournalEntry);
+        }
+
+        // Close dialogs with backdrop click or Escape
+        document.querySelectorAll('.focus-dialog').forEach(dialog => {
+          dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) {
+              dialog.close();
+            }
+          });
+        });
+      }
+
+      // Run on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+</body>
+
+</html>
